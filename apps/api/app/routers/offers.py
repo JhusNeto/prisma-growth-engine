@@ -16,6 +16,29 @@ router = APIRouter(
 )
 
 
+def require_editable_product(
+    session: Session,
+    product_id: UUID,
+) -> Product:
+    product = session.scalar(
+        select(Product).where(Product.id == product_id).with_for_update()
+    )
+
+    if product is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Product not found",
+        )
+
+    if product.status == "live":
+        raise HTTPException(
+            status_code=409,
+            detail="Pause product before editing offers",
+        )
+
+    return product
+
+
 @router.post(
     "/products/{product_id}/offers",
     response_model=OfferRead,
@@ -26,14 +49,13 @@ def create_offer(
     payload: OfferCreate,
     session: Annotated[Session, Depends(get_session)],
 ) -> Offer:
-    if session.get(Product, product_id) is None:
-        raise HTTPException(404, "Product not found")
+    require_editable_product(session, product_id)
 
     offer = Offer(
         product_id=product_id,
         price_cents=payload.price_cents,
         currency=payload.currency,
-        checkout_url=str(payload.checkout_url) if payload.checkout_url else None,
+        checkout_url=(str(payload.checkout_url) if payload.checkout_url else None),
         active=True,
     )
 
@@ -51,6 +73,7 @@ def create_offer(
             },
         )
     )
+
     session.commit()
     session.refresh(offer)
 
@@ -66,16 +89,20 @@ def list_offers(
     session: Annotated[Session, Depends(get_session)],
 ) -> list[Offer]:
     if session.get(Product, product_id) is None:
-        raise HTTPException(404, "Product not found")
+        raise HTTPException(
+            status_code=404,
+            detail="Product not found",
+        )
 
-    return list(
-        session.scalars(
-            select(Offer).where(Offer.product_id == product_id).order_by(Offer.id)
-        ).all()
-    )
+    statement = select(Offer).where(Offer.product_id == product_id).order_by(Offer.id)
+
+    return list(session.scalars(statement).all())
 
 
-@router.patch("/offers/{offer_id}", response_model=OfferRead)
+@router.patch(
+    "/offers/{offer_id}",
+    response_model=OfferRead,
+)
 def update_offer(
     offer_id: UUID,
     payload: OfferUpdate,
@@ -84,16 +111,27 @@ def update_offer(
     offer = session.get(Offer, offer_id)
 
     if offer is None:
-        raise HTTPException(404, "Offer not found")
+        raise HTTPException(
+            status_code=404,
+            detail="Offer not found",
+        )
+
+    require_editable_product(session, offer.product_id)
 
     changes = payload.model_dump(exclude_unset=True)
 
     if not changes:
-        raise HTTPException(422, "No changes provided")
+        raise HTTPException(
+            status_code=422,
+            detail="No changes provided",
+        )
 
     for field in ("price_cents", "active"):
         if field in changes and changes[field] is None:
-            raise HTTPException(422, f"{field} cannot be null")
+            raise HTTPException(
+                status_code=422,
+                detail=f"{field} cannot be null",
+            )
 
     if "checkout_url" in changes and changes["checkout_url"] is not None:
         changes["checkout_url"] = str(changes["checkout_url"])

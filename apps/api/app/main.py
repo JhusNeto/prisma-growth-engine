@@ -1,3 +1,4 @@
+from app.routers.lifecycle import router as lifecycle_router
 from app.routers.offers import router as offers_router
 from app.routers.products import router as products_router
 from fastapi import FastAPI
@@ -10,6 +11,7 @@ app = FastAPI(
 
 app.include_router(products_router)
 app.include_router(offers_router)
+app.include_router(lifecycle_router)
 
 
 @app.get("/health", tags=["system"])

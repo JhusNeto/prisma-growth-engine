@@ -31,3 +31,5 @@
 
 ## Product Core
 - [PC-001](specs/product-core.md)
+
+- [Product Lifecycle](specs/product-lifecycle.md)

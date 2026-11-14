@@ -22,7 +22,7 @@ class ProductRead(BaseModel):
     slug: str
     name: str
     audience: str
-    status: Literal["draft", "prepared", "approved", "live", "paused"]
+    status: Literal["draft", "prepared", "approved", "live", "paused", "archived"]
     created_at: datetime
     updated_at: datetime
 
@@ -57,3 +57,15 @@ class OfferRead(BaseModel):
     currency: str
     checkout_url: str | None
     active: bool
+
+
+class PublicationChecks(BaseModel):
+    checkout_tested: bool
+    delivery_tested: bool
+    approved_for_publication: bool
+
+
+class ProductTransition(BaseModel):
+    to_status: Literal["draft", "prepared", "approved", "live", "paused", "archived"]
+    reason: str = Field(min_length=5, max_length=500)
+    checks: PublicationChecks | None = None
