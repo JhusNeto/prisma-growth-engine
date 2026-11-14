@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Literal
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, HttpUrl, field_validator
 
 
 class ProductCreate(BaseModel):
@@ -25,3 +25,35 @@ class ProductRead(BaseModel):
     status: Literal["draft", "prepared", "approved", "live", "paused"]
     created_at: datetime
     updated_at: datetime
+
+
+class SecureCheckoutInput(BaseModel):
+    checkout_url: HttpUrl | None = None
+
+    @field_validator("checkout_url")
+    @classmethod
+    def require_https(cls, value: HttpUrl | None) -> HttpUrl | None:
+        if value is not None and value.scheme != "https":
+            raise ValueError("Checkout must use HTTPS")
+        return value
+
+
+class OfferCreate(SecureCheckoutInput):
+    price_cents: int = Field(gt=0, le=10_000_000)
+    currency: Literal["BRL"] = "BRL"
+
+
+class OfferUpdate(SecureCheckoutInput):
+    price_cents: int | None = Field(default=None, gt=0, le=10_000_000)
+    active: bool | None = None
+
+
+class OfferRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    product_id: UUID
+    price_cents: int
+    currency: str
+    checkout_url: str | None
+    active: bool

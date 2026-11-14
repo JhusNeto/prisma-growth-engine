@@ -13,6 +13,7 @@ from sqlalchemy.orm import Session
 router = APIRouter(
     prefix="/v1/products",
     tags=["products"],
+    dependencies=[Depends(require_admin)],
 )
 
 
