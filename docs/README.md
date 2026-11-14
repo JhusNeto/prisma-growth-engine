@@ -28,3 +28,6 @@
 - Workflows define automation behavior.
 - Runbooks describe operational procedures.
 - Code and documentation evolve together.
+
+## Product Core
+- [PC-001](specs/product-core.md)
