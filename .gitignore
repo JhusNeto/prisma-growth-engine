@@ -11,3 +11,5 @@ data/
 .idea/
 .astro/
 dist/
+
+*.egg-info/
