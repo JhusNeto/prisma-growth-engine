@@ -1,0 +1,15 @@
+---
+import catalog from "../../data/catalog.public.json";
+import LandingPage from "../../components/LandingPage.astro";
+
+export function getStaticPaths() {
+  return catalog.map((product) => ({
+    params: { slug: product.slug },
+    props: { product },
+  }));
+}
+
+const { product } = Astro.props;
+---
+
+<LandingPage product={product} />

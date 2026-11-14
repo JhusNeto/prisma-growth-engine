@@ -6,10 +6,12 @@ __pycache__/
 *.py[cod]
 node_modules/
 apps/web/dist/
-data/
+/data/
 
 .idea/
 .astro/
 dist/
 
 *.egg-info/
+
+apps/web/src/data/catalog.preview.json

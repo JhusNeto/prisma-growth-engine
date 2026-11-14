@@ -1,0 +1,193 @@
+---
+const { product, preview = false } = Astro.props;
+
+const offer = product.offers?.[0];
+
+const price = offer
+  ? new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    }).format(offer.price_cents / 100)
+  : null;
+
+const title = `${product.name} | Prisma Dados`;
+const description = `${product.name}: uma solução em preparação para ${product.audience}.`;
+---
+
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta
+      name="robots"
+      content={preview ? "noindex,nofollow" : "index,follow"}
+    />
+    <title>{title}</title>
+  </head>
+
+  <body>
+    <div class="shell">
+      <header>
+        <a class="brand" href="/">PRISMA <span>DADOS</span></a>
+        <span class="header-label">
+          {preview ? "AMBIENTE DE PRÉVIA" : "PRODUTOS DIGITAIS"}
+        </span>
+      </header>
+
+      <main>
+        <div class="hero">
+          <div class="eyebrow">
+            {preview ? "PRÉVIA INTERNA · NÃO PUBLICADO" : "SOLUÇÃO DIGITAL"}
+          </div>
+
+          <h1>{product.name}<span class="dot">.</span></h1>
+
+          <p class="lead">
+            Uma proposta digital pensada para
+            <strong>{product.audience.toLowerCase()}</strong>.
+          </p>
+
+          <p class="description">
+            Estamos preparando uma experiência objetiva,
+            prática e fácil de utilizar. Os detalhes do produto
+            serão apresentados após sua validação.
+          </p>
+
+          <div class="actions">
+            {
+              !preview && offer ? (
+                <a
+                  class="primary"
+                  href={offer.checkout_url}
+                  rel="noopener noreferrer"
+                >
+                  Conhecer oferta · {price}
+                </a>
+              ) : (
+                <span class="disabled">Oferta ainda não disponível</span>
+              )
+            }
+          </div>
+        </div>
+
+        <section class="info">
+          <div>
+            <span class="info-number">01 /</span>
+            <h2>Proposta</h2>
+            <p>Uma experiência digital com foco em clareza e facilidade.</p>
+          </div>
+
+          <div>
+            <span class="info-number">02 /</span>
+            <h2>Disponibilidade</h2>
+            <p>
+              {preview
+                ? "Produto em desenvolvimento e validação."
+                : "Consulte as condições disponíveis na oferta."}
+            </p>
+          </div>
+
+          <div>
+            <span class="info-number">03 /</span>
+            <h2>Próximos passos</h2>
+            <p>Confira as informações comerciais antes de adquirir.</p>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <span>© Prisma Dados</span>
+        <span>Produtos digitais com inteligência.</span>
+      </footer>
+    </div>
+  </body>
+</html>
+
+<style>
+  :global(*) { box-sizing: border-box; }
+
+  :global(body) {
+    margin: 0;
+    background: #090e1c;
+    color: #f1f5ff;
+    font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  }
+
+  .shell { max-width: 1160px; margin: auto; padding: 0 28px; }
+
+  header, footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  header { padding: 34px 0; border-bottom: 1px solid #253047; }
+
+  .brand { color: white; text-decoration: none; font-weight: 900; letter-spacing: 2px; }
+  .brand span, .dot { color: #7e9cff; }
+  .header-label { font-size: 11px; letter-spacing: 2px; color: #a1aec8; }
+
+  .hero { padding: 120px 0 140px; max-width: 850px; }
+
+  .eyebrow { font-size: 12px; letter-spacing: 2px; color: #88a5ff; }
+
+  h1 {
+    margin: 24px 0;
+    font-size: clamp(60px, 10vw, 122px);
+    letter-spacing: -6px;
+    line-height: 1;
+  }
+
+  .lead { font-size: clamp(22px, 3vw, 33px); line-height: 1.4; }
+  .lead strong { color: #a9bbff; }
+
+  .description {
+    max-width: 660px;
+    margin-top: 30px;
+    color: #b0bdd4;
+    font-size: 17px;
+    line-height: 1.8;
+  }
+
+  .actions { margin-top: 42px; }
+
+  .primary, .disabled {
+    display: inline-block;
+    padding: 18px 25px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 700;
+  }
+
+  .primary { background: #93acff; color: #071126; }
+  .primary:hover { background: #c0ceff; }
+  .disabled { background: #1d2940; color: #a1afc8; }
+
+  .info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    padding: 50px 0 80px;
+    border-top: 1px solid #253047;
+  }
+
+  .info-number { color: #829bf0; }
+  .info h2 { font-size: 20px; }
+  .info p { color: #a3b0c8; line-height: 1.7; }
+
+  footer {
+    border-top: 1px solid #253047;
+    padding: 28px 0 50px;
+    color: #8898b4;
+    font-size: 13px;
+  }
+
+  @media (max-width: 700px) {
+    .hero { padding: 80px 0 100px; }
+    h1 { letter-spacing: -3px; }
+    .info { grid-template-columns: 1fr; }
+    .header-label { font-size: 9px; }
+    footer { gap: 20px; }
+  }
+</style>
