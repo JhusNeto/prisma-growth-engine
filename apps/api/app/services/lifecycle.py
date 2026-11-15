@@ -3,6 +3,7 @@ from urllib.parse import urlsplit
 from uuid import UUID
 
 from app.models import Offer, OutboxEvent, Product
+from app.page_models import ProductPage
 from app.schemas import ProductTransition
 from fastapi import HTTPException
 from sqlalchemy import select
@@ -51,6 +52,14 @@ def require_publication_readiness(
         raise HTTPException(
             status_code=422,
             detail="Publication requires all manual confirmations",
+        )
+
+    page = session.get(ProductPage, product_id)
+
+    if page is None or not page.approved:
+        raise HTTPException(
+            status_code=409,
+            detail="Approved commercial content is required",
         )
 
     offers = session.scalars(select(Offer).where(Offer.product_id == product_id)).all()

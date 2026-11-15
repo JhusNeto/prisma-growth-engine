@@ -151,6 +151,36 @@ def test_publication_and_commercial_lock(db_client):
 
     approve_product(client, product_id)
 
+    # Prepare approved commercial page
+    page = {
+        "headline": "Uma página comercial de teste completa",
+        "subheadline": "Uma solução demonstrativa para pequenos negócios",
+        "description": (
+            "Conteúdo utilizado exclusivamente para verificar "
+            "as regras de publicação e bloqueio comercial."
+        ),
+        "benefits": [
+            "Apresentação organizada da oferta digital",
+            "Informações comerciais claras e objetivas",
+        ],
+        "faqs": [
+            {
+                "question": "Qual é a finalidade deste teste?",
+                "answer": "Validar a publicação controlada de produtos.",
+            }
+        ],
+        "cta_label": "Conhecer a oferta",
+        "seo_title": "Teste de produto comercial | Prisma Dados",
+        "seo_description": (
+            "Página demonstrativa para validar o ciclo "
+            "comercial de publicação e suspensão de produtos."
+        ),
+    }
+
+    page_url = f"/v1/products/{product_id}/page"
+    assert client.put(page_url, json=page).status_code == 200
+    assert client.post(f"{page_url}/approve").status_code == 200
+
     published = transition(
         client,
         product_id,

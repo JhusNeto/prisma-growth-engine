@@ -9,8 +9,9 @@ from sqlalchemy.orm import Session
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "apps/api"))
 
-from app.db import get_engine  # noqa: E402
-from app.models import Offer, Product  # noqa: E402
+from app.db import get_engine
+from app.models import Offer, Product
+from app.page_models import ProductPage
 
 DATA_DIR = ROOT / "apps/web/src/data"
 
@@ -49,18 +50,14 @@ def serialize(product, offers):
 
 
 with Session(get_engine()) as session:
-    products = session.scalars(
-        select(Product).order_by(Product.slug)
-    ).all()
+    products = session.scalars(select(Product).order_by(Product.slug)).all()
 
     public = []
     preview = []
 
     for product in products:
         offers = session.scalars(
-            select(Offer).where(
-                Offer.product_id == product.id
-            )
+            select(Offer).where(Offer.product_id == product.id)
         ).all()
 
         valid_offers = sorted(
@@ -74,19 +71,21 @@ with Session(get_engine()) as session:
             preview.append(record)
 
         if product.status == "live":
+            page = session.get(ProductPage, product.id)
+
+            if page is None or not page.approved:
+                raise SystemExit(f"Produto live sem conteúdo aprovado: {product.slug}")
+
+        if product.status == "live":
             if not valid_offers:
-                raise SystemExit(
-                    f"Produto live sem checkout válido: {product.slug}"
-                )
+                raise SystemExit(f"Produto live sem checkout válido: {product.slug}")
 
             public.append(record)
 
 
 def write_json(name, records):
     path = DATA_DIR / name
-    path.write_text(
-        json.dumps(records, ensure_ascii=False, indent=2) + "\n"
-    )
+    path.write_text(json.dumps(records, ensure_ascii=False, indent=2) + "\n")
     print(f"{path.name}: {len(records)} produto(s)")
 
 
