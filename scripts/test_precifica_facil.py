@@ -6,7 +6,7 @@ from zipfile import ZipFile
 
 PATH = Path(
     "products/precifica-facil/"
-    "Precifica_Facil_MVP_001.xlsx"
+    "Precifica_Facil_v1_0.xlsx"
 )
 
 NS = {
@@ -103,11 +103,8 @@ with ZipFile(PATH) as workbook:
         for sheet in (calc, sim)
     )
 
-    if not protected:
-        print(
-            "PENDENTE: proteger fórmulas "
-            "contra edição acidental."
-        )
+    assert protected, "Abas de cálculo sem proteção"
+    print("PASSOU: abas de cálculo protegidas.")
 
 print(
     "AVISO: a recalculação das fórmulas "
