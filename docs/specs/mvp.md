@@ -28,3 +28,11 @@ Um produto de teste é cadastrado, tem uma landing page publicada, recebe evento
 3. Produto pausado impede novas campanhas, não apaga pedidos nem entregas devidas.
 4. Cada ação automatizada deixa rastro de auditoria.
 
+
+## Implementação concluída (Backend & Vitrine)
+
+- `GET /health`: disponibilidade da API.
+- `POST/GET /v1/products`, `POST/GET/PATCH /v1/offers`, `POST /v1/products/{id}/transitions`, `PUT/GET/POST /v1/products/{id}/page`: gestão completa do catálogo com travas comerciais e aprovação humana.
+- `POST /v1/webhooks/hotmart`: receiver autenticado (`X-Hotmart-Hottok`) e idempotente para vendas e reembolsos.
+- `GET /v1/outbox/pending` e `POST /v1/outbox/{id}/ack`: dispatcher transacional para consumo assíncrono via n8n.
+- `GET /v1/orders` e `GET /v1/analytics/overview`: consulta administrativa de pedidos e métricas financeiras consolidadas.
