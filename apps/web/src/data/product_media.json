@@ -1,0 +1,32 @@
+{
+  "precifica-facil": {
+    "section_eyebrow": "POR DENTRO DA PLANILHA",
+    "section_title": "Veja o Precifica Fácil funcionando",
+    "demos": [
+      {
+        "title": "1. Precificador — descubra seu preço de venda",
+        "caption": "Informe custos unitários, tarifas, tributos e a margem desejada (ex.: 25% na camiseta básica) para chegar ao preço sugerido de R$ 82,18 e ao diagnóstico de viabilidade.",
+        "image": "/images/precifica-facil/precificador.png",
+        "alt": "Aba Precificador da planilha Precifica Fácil mostrando custos, taxas, margem de 25% e preço sugerido de R$ 82,18",
+        "width": 1041,
+        "height": 786
+      },
+      {
+        "title": "2. Simulador — veja o impacto real dos descontos",
+        "caption": "Ao simular 10% de desconto, o preço cai para R$ 73,96, o lucro estimado vai para R$ 13,19 e a margem efetiva passa a 17,8% — além de indicar o desconto máximo sem prejuízo.",
+        "image": "/images/precifica-facil/simulador.png",
+        "alt": "Aba Simulador mostrando impacto de 10% de desconto e tabela automática de cenários de 0% a 30%",
+        "width": 1297,
+        "height": 786
+      },
+      {
+        "title": "3. Exemplos — aprenda com cenários práticos",
+        "caption": "Compare três produtos prontos (camiseta básica, caneca personalizada e lanche artesanal) para entender rapidamente como preencher cada coluna.",
+        "image": "/images/precifica-facil/exemplos.png",
+        "alt": "Aba Exemplos com três cenários práticos preenchidos lado a lado",
+        "width": 1802,
+        "height": 520
+      }
+    ]
+  }
+}

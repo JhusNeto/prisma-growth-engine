@@ -29,6 +29,18 @@ fixture = [{
         "seo_title": "SEO - Produto QA",
         "seo_description": "Descricao SEO da fixture automatizada.",
     },
+    "media": {
+        "section_eyebrow": "DEMONSTRACAO QA",
+        "section_title": "Veja a demonstracao QA",
+        "demos": [{
+            "title": "Tela principal QA",
+            "caption": "Legenda da tela principal de teste.",
+            "image": "/images/precifica-facil/precificador.png",
+            "alt": "Imagem de teste QA",
+            "width": 1041,
+            "height": 786,
+        }],
+    },
     "offers": [{
         "price_cents": 3900,
         "currency": "BRL",
@@ -56,6 +68,9 @@ try:
     expected = [
         "Titulo de teste da landing page",
         "Subtitulo exclusivo do teste automatizado",
+        "Veja a demonstracao QA",
+        "Tela principal QA",
+        "demo-lightbox",
         "Beneficio exclusivo de teste um",
         "Como testar o produto QA?",
         "Esta resposta pertence somente ao teste.",
@@ -71,7 +86,7 @@ try:
         WEB / "dist/preview/qa-render-test/index.html"
     ).exists()
 
-    print("Renderização e SEO validados.")
+    print("Renderização, mídia e SEO validados.")
 
 finally:
     CATALOG.write_bytes(original)

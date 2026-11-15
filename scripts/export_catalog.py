@@ -16,6 +16,13 @@ from app.models import Offer, Product
 from app.page_models import ProductPage
 
 DATA_DIR = ROOT / "apps/web/src/data"
+MEDIA_FILE = DATA_DIR / "product_media.json"
+
+
+def load_media_catalog() -> dict:
+    if not MEDIA_FILE.exists():
+        return {}
+    return json.loads(MEDIA_FILE.read_text(encoding="utf-8"))
 
 
 def valid_offer(offer: Offer) -> bool:
@@ -54,6 +61,7 @@ def serialize_product(
     product: Product,
     page: ProductPage | None,
     offers: list[Offer],
+    media: dict | None = None,
 ) -> dict:
     return {
         "slug": product.slug,
@@ -61,6 +69,7 @@ def serialize_product(
         "audience": product.audience,
         "status": product.status,
         "page": serialize_page(page),
+        "media": media,
         "offers": [
             {
                 "price_cents": offer.price_cents,
@@ -74,12 +83,14 @@ def serialize_product(
 
 def build_catalog(session: Session) -> tuple[list, list]:
     products = session.scalars(select(Product).order_by(Product.slug)).all()
+    media_catalog = load_media_catalog()
 
     public = []
     preview = []
 
     for product in products:
         page = session.get(ProductPage, product.id)
+        media = media_catalog.get(product.slug)
 
         offers = session.scalars(
             select(Offer).where(Offer.product_id == product.id)
@@ -91,7 +102,7 @@ def build_catalog(session: Session) -> tuple[list, list]:
         )
 
         if product.slug == "precifica-facil":
-            preview.append(serialize_product(product, page, valid_offers))
+            preview.append(serialize_product(product, page, valid_offers, media))
 
         if product.status != "live":
             continue
@@ -102,7 +113,7 @@ def build_catalog(session: Session) -> tuple[list, list]:
         if not valid_offers:
             raise RuntimeError(f"Produto live sem checkout válido: {product.slug}")
 
-        public.append(serialize_product(product, page, valid_offers))
+        public.append(serialize_product(product, page, valid_offers, media))
 
     return public, preview
 

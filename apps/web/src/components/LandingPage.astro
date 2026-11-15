@@ -2,6 +2,8 @@
 const { product, preview = false } = Astro.props;
 
 const content = product.page;
+const media = product.media;
+const demos = media?.demos ?? [];
 const offer = product.offers?.[0];
 
 const headline = content?.headline ?? product.name;
@@ -40,6 +42,7 @@ const canonical = !preview && Astro.site
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="description" content={description} />
     <meta
       name="robots"
@@ -69,7 +72,7 @@ const canonical = !preview && Astro.site
       <main>
         <section class="hero">
           <p class="eyebrow">
-            {preview ? "CONTEÚDO EM REVISÃO" : "SOLUÇÃO DIGITAL"}
+            {preview ? "VERSÃO DE PRÉ-LANÇAMENTO" : "SOLUÇÃO DIGITAL"}
           </p>
 
           <h1>{headline}<span class="accent">.</span></h1>
@@ -97,8 +100,52 @@ const canonical = !preview && Astro.site
           {content && (
             <p class="description">{content.description}</p>
           )}
-
         </section>
+
+        {demos.length > 0 && (
+          <section class="section" aria-labelledby="demos-heading">
+            <p class="eyebrow">{media?.section_eyebrow ?? "DEMONSTRAÇÃO REAL"}</p>
+            <h2 id="demos-heading">
+              {media?.section_title ?? "Veja o produto funcionando"}
+            </h2>
+
+            <div class="demos">
+              {demos.map((demo) => (
+                <article class="demo-card">
+                  <div class="demo-header">
+                    <div>
+                      <h3>{demo.title}</h3>
+                      <p>{demo.caption}</p>
+                    </div>
+                    <button
+                      type="button"
+                      class="zoom-button"
+                      data-zoom-src={demo.image}
+                      data-zoom-alt={demo.alt}
+                      data-zoom-title={demo.title}
+                    >
+                      Ampliar tela
+                    </button>
+                  </div>
+
+                  <div class="demo-frame">
+                    <img
+                      src={demo.image}
+                      alt={demo.alt}
+                      width={demo.width}
+                      height={demo.height}
+                      loading="lazy"
+                      decoding="async"
+                      data-zoom-src={demo.image}
+                      data-zoom-alt={demo.alt}
+                      data-zoom-title={demo.title}
+                    />
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
 
         {content?.benefits?.length > 0 && (
           <section class="section" aria-labelledby="benefits-heading">
@@ -147,8 +194,51 @@ const canonical = !preview && Astro.site
         <span>Produtos digitais com inteligência.</span>
       </footer>
     </div>
+
+    {demos.length > 0 && (
+      <dialog id="demo-lightbox" class="lightbox" aria-labelledby="lightbox-title">
+        <div class="lightbox-bar">
+          <strong id="lightbox-title">Visualização</strong>
+          <button type="button" id="lightbox-close" class="close-button">
+            Fechar (ESC)
+          </button>
+        </div>
+        <div class="lightbox-body">
+          <img id="lightbox-img" src="" alt="" />
+        </div>
+      </dialog>
+    )}
   </body>
 </html>
+
+<script>
+  const dialog = document.getElementById("demo-lightbox") as HTMLDialogElement | null;
+  const dialogImg = document.getElementById("lightbox-img") as HTMLImageElement | null;
+  const dialogTitle = document.getElementById("lightbox-title");
+  const closeBtn = document.getElementById("lightbox-close");
+
+  if (dialog && dialogImg && dialogTitle) {
+    document.querySelectorAll("[data-zoom-src]").forEach((el) => {
+      el.addEventListener("click", () => {
+        const src = el.getAttribute("data-zoom-src") ?? "";
+        const alt = el.getAttribute("data-zoom-alt") ?? "";
+        const title = el.getAttribute("data-zoom-title") ?? "Demonstração";
+        dialogImg.src = src;
+        dialogImg.alt = alt;
+        dialogTitle.textContent = title;
+        dialog.showModal();
+      });
+    });
+
+    closeBtn?.addEventListener("click", () => dialog.close());
+
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) {
+        dialog.close();
+      }
+    });
+  }
+</script>
 
 <style>
   :global(*) {
@@ -268,6 +358,110 @@ const canonical = !preview && Astro.site
     margin: 18px 0 36px;
   }
 
+  .demos {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .demo-card {
+    border: 1px solid #293753;
+    background: #101a30;
+    border-radius: 16px;
+    padding: 24px;
+    min-width: 0;
+  }
+
+  .demo-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  .demo-header h3 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    color: #f2f5ff;
+  }
+
+  .demo-header p {
+    margin: 0;
+    color: #b3bfd7;
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 760px;
+  }
+
+  .zoom-button, .close-button {
+    background: #1c2942;
+    color: #d6e1ff;
+    border: 1px solid #35476b;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 650;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .zoom-button:hover, .close-button:hover {
+    background: #27395c;
+  }
+
+  .demo-frame {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid #22304b;
+    background: #0a101f;
+  }
+
+  .demo-frame img {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: zoom-in;
+  }
+
+  .lightbox {
+    width: min(96vw, 1400px);
+    max-height: 92vh;
+    padding: 0;
+    border: 1px solid #35476b;
+    border-radius: 14px;
+    background: #0d1528;
+    color: #f2f5ff;
+  }
+
+  .lightbox::backdrop {
+    background: rgba(4, 7, 15, 0.85);
+    backdrop-filter: blur(4px);
+  }
+
+  .lightbox-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 20px;
+    border-bottom: 1px solid #283247;
+  }
+
+  .lightbox-body {
+    padding: 16px;
+    overflow: auto;
+    max-height: calc(92vh - 64px);
+  }
+
+  .lightbox-body img {
+    display: block;
+    max-width: none;
+    height: auto;
+    border-radius: 8px;
+  }
+
   .benefits {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -328,6 +522,18 @@ const canonical = !preview && Astro.site
       width: 100%;
       justify-content: center;
       text-align: center;
+    }
+    .demo-card { padding: 18px; }
+    .demo-header {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .zoom-button {
+      width: 100%;
+      text-align: center;
+    }
+    .demo-frame img {
+      min-width: 680px;
     }
     .benefits { grid-template-columns: 1fr; }
     .section { padding: 45px 0; }
