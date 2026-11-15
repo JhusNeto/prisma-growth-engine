@@ -1,0 +1,56 @@
+---
+---
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Página não encontrada | Prisma Dados</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="robots" content="noindex,nofollow" />
+  </head>
+  <body>
+    <main class="container">
+      <p class="eyebrow">ERRO 404</p>
+      <h1>Página não encontrada<span class="accent">.</span></h1>
+      <p>O endereço acessado não existe ou ainda não foi publicado.</p>
+      <a href="/">Voltar para a página inicial</a>
+    </main>
+  </body>
+</html>
+
+<style>
+  :global(body) {
+    margin: 0;
+    background: #090e1c;
+    color: #f2f5ff;
+    font-family: Inter, system-ui, sans-serif;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+  }
+  .container {
+    width: min(560px, calc(100% - 40px));
+  }
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #9ab0ff;
+  }
+  h1 {
+    font-size: clamp(32px, 5vw, 48px);
+    margin: 12px 0 16px;
+  }
+  .accent { color: #91aaff; }
+  p { color: #b3bfd7; line-height: 1.6; margin-bottom: 24px; }
+  a {
+    display: inline-block;
+    padding: 14px 20px;
+    border-radius: 10px;
+    background: #98b0ff;
+    color: #071126;
+    font-weight: 750;
+    text-decoration: none;
+  }
+</style>
