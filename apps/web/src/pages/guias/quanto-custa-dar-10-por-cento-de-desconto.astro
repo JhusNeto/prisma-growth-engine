@@ -1,0 +1,102 @@
+---
+import GuideLayout from "../../layouts/GuideLayout.astro";
+---
+
+<GuideLayout
+  title="Quanto custa dar 10% de desconto? A conta que todo MEI precisa fazer antes de promover"
+  description="Conceder 10% de desconto no preço final não reduz seu lucro em apenas 10%. Veja com números reais quanto a margem encolhe e como achar o limite sem prejuízo."
+  eyebrow="ESTRATÉGIA DE DESCONTOS"
+  readTime="3 min de leitura"
+  relatedSlug="precifica-facil"
+>
+  <p>
+    Na hora de fechar uma venda no Pix ou participar de uma data promocional, é muito comum
+    oferecer <strong>10% de desconto</strong> de cabeça, partindo da intuição de que "se eu
+    ganhava 25% de margem, agora vou ganhar 15% e ainda está ótimo".
+  </p>
+
+  <p>
+    Na prática, o impacto no lucro em reais é muito mais severo — porque o desconto sai
+    integralmente da sua fatia de lucro, enquanto o custo do fornecedor e a embalagem
+    continuam exatamente os mesmos.
+  </p>
+
+  <h2>Simulação real: antes e depois de 10% de desconto</h2>
+
+  <p>
+    Vamos retomar o exemplo de um produto vendido a <strong>R$ 82,18</strong>, com R$ 52,50 de
+    custos operacionais, R$ 0,50 de tarifa fixa e 10,5% de tributos + taxa de cartão:
+  </p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Indicador</th>
+          <th>Preço cheio (0% desc.)</th>
+          <th>Com 10% de desconto</th>
+          <th>Com 20% de desconto</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Preço cobrado ao cliente</td>
+          <td><strong>R$ 82,18</strong></td>
+          <td><strong>R$ 73,96</strong></td>
+          <td><strong>R$ 65,74</strong></td>
+        </tr>
+        <tr>
+          <td>Tributos e taxas (10,5% + R$ 0,50)</td>
+          <td>− R$ 9,13</td>
+          <td>− R$ 8,27</td>
+          <td>− R$ 7,40</td>
+        </tr>
+        <tr>
+          <td>Custos operacionais unitários</td>
+          <td>− R$ 52,50</td>
+          <td>− R$ 52,50</td>
+          <td>− R$ 52,50</td>
+        </tr>
+        <tr>
+          <td><strong>Lucro estimado por unidade</strong></td>
+          <td><strong>R$ 20,55</strong></td>
+          <td><strong>R$ 13,19</strong></td>
+          <td><strong>R$ 5,84</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Margem efetiva</strong></td>
+          <td><strong>25,0%</strong></td>
+          <td><strong>17,8%</strong></td>
+          <td><strong>8,9%</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>O que os números mostram</h2>
+
+  <ul>
+    <li>
+      Um desconto de <strong>10% no preço</strong> reduziu o lucro unitário de R$ 20,55 para
+      R$ 13,19 — uma <strong>queda de 35,8% no seu lucro em reais</strong>.
+    </li>
+    <li>
+      Para ganhar os mesmos R$ 205,50 que você faria vendendo 10 unidades no preço cheio,
+      com 10% de desconto você precisará vender <strong>16 unidades</strong> (60% mais volume).
+    </li>
+    <li>
+      Nesse exemplo, o <strong>desconto máximo teórico de equilíbrio</strong> (onde o lucro
+      chega a R$ 0,00) é de <strong>27,9%</strong>. Qualquer promoção de 30% já gera prejuízo
+      a cada venda realizada.
+    </li>
+  </ul>
+
+  <div class="formula-box">
+    Desconto Máximo sem Prejuízo (%) = 1 − [ Custos Fixos/Unitários ÷ (Preço de Tabela × (1 − Taxas %)) ]
+  </div>
+
+  <p>
+    Antes de divulgar qualquer cupom ou promoção, simule o cenário completo com taxas e
+    custos reais para garantir que o aumento de vendas realmente compense a redução da margem.
+  </p>
+</GuideLayout>

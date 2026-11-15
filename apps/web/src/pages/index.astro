@@ -1,18 +1,153 @@
 ---
-const title = "Prisma Growth Engine";
+import publicCatalog from "../data/catalog.public.json";
+
+const title = "Prisma Dados — Produtos Digitais e Guias Práticos";
 ---
+<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
-    <meta name="description" content="Infraestrutura para operar microprodutos digitais." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta
+      name="description"
+      content="Ferramentas práticas e guias objetivos de precificação e gestão para MEIs e pequenos comerciantes."
+    />
   </head>
   <body>
-    <main>
-      <h1>{title}</h1>
-      <p>Base pública do MVP. A primeira landing page de produto entrará aqui.</p>
-    </main>
+    <div class="container">
+      <header>
+        <a class="brand" href="/">PRISMA <span>DADOS</span></a>
+        <nav>
+          <a href="/guias">GUIAS EDUCATIVOS</a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero">
+          <p class="eyebrow">FERRAMENTAS E CONHECIMENTO APLICADO</p>
+          <h1>Decisões melhores com números claros<span class="accent">.</span></h1>
+          <p class="subtitle">
+            Planilhas práticas e conteúdos diretos ao ponto para ajudar MEIs e pequenos
+            negócios a precificar produtos, simular descontos e proteger a margem.
+          </p>
+
+          <div class="actions">
+            <a class="primary-btn" href="/guias">Explorar guias de precificação</a>
+          </div>
+        </section>
+
+        {publicCatalog.length > 0 && (
+          <section class="section">
+            <p class="eyebrow">CATÁLOGO DISPONÍVEL</p>
+            <h2>Soluções digitais</h2>
+            <div class="grid">
+              {publicCatalog.map((product) => (
+                <article class="card">
+                  <h3>{product.name}</h3>
+                  <p>{product.page?.subheadline ?? product.audience}</p>
+                  <a href={`/p/${product.slug}`}>Conhecer solução →</a>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+      </main>
+
+      <footer>
+        <span>© Prisma Dados</span>
+        <span>Dados que revelam decisões.</span>
+      </footer>
+    </div>
   </body>
 </html>
 
+<style>
+  :global(*) { box-sizing: border-box; }
+  :global(body) {
+    margin: 0;
+    background: #090e1c;
+    color: #f2f5ff;
+    font-family: Inter, system-ui, sans-serif;
+  }
+  .container {
+    width: min(960px, calc(100% - 40px));
+    margin: auto;
+  }
+  header, footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  header {
+    padding: 28px 0;
+    border-bottom: 1px solid #283247;
+  }
+  .brand {
+    color: white;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-decoration: none;
+  }
+  .brand span, .accent { color: #91aaff; }
+  nav a, .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #9ab0ff;
+    text-decoration: none;
+  }
+  .hero {
+    padding: 72px 0 80px;
+    max-width: 780px;
+  }
+  h1 {
+    font-size: clamp(38px, 6vw, 64px);
+    letter-spacing: -1.8px;
+    line-height: 1.08;
+    margin: 18px 0 22px;
+  }
+  .subtitle {
+    font-size: clamp(19px, 2.5vw, 24px);
+    color: #c6d3ee;
+    line-height: 1.5;
+    margin: 0 0 32px;
+  }
+  .primary-btn {
+    display: inline-block;
+    padding: 16px 24px;
+    border-radius: 12px;
+    background: #98b0ff;
+    color: #071126;
+    font-weight: 750;
+    text-decoration: none;
+  }
+  .primary-btn:hover { background: #c4d0ff; }
+  .section {
+    padding: 56px 0;
+    border-top: 1px solid #283247;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 24px;
+  }
+  .card {
+    border: 1px solid #293753;
+    background: #101a30;
+    border-radius: 14px;
+    padding: 24px;
+  }
+  .card h3 { margin: 0 0 10px; }
+  .card p { color: #b3bfd7; line-height: 1.6; }
+  .card a { color: #91aaff; font-weight: 650; text-decoration: none; }
+  footer {
+    padding: 28px 0 48px;
+    border-top: 1px solid #283247;
+    color: #9aa9c5;
+    font-size: 13px;
+  }
+</style>

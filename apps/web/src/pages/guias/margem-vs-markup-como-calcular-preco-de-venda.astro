@@ -1,0 +1,120 @@
+---
+import GuideLayout from "../../layouts/GuideLayout.astro";
+---
+
+<GuideLayout
+  title="Margem vs. Markup: por que multiplicar o custo por 2 faz você perder dinheiro"
+  description="Entenda a diferença entre margem sobre o preço de venda e markup sobre o custo, e aprenda a fórmula correta para embutir taxas e impostos sem corroer o lucro."
+  eyebrow="PRECIFICAÇÃO NA PRÁTICA"
+  readTime="4 min de leitura"
+  relatedSlug="precifica-facil"
+>
+  <p>
+    Um dos erros mais comuns entre pequenos comerciantes e MEIs é formar o preço de venda
+    pegando o custo da mercadoria e aplicando um percentual direto por cima — o famoso
+    <strong>markup</strong> (por exemplo, "comprei por R$ 50,00, vou somar 35% e vender por R$ 67,50").
+  </p>
+
+  <p>
+    O problema aparece na hora em que o dinheiro cai na conta: maquininha de cartão,
+    comissão de marketplace e impostos não são cobrados sobre o seu custo de compra,
+    e sim <strong>sobre o preço final pago pelo cliente</strong>.
+  </p>
+
+  <h2>A diferença entre Markup e Margem</h2>
+
+  <ul>
+    <li>
+      <strong>Markup</strong> é um índice multiplicador aplicado <em>sobre o custo</em>.
+    </li>
+    <li>
+      <strong>Margem de lucro</strong> é o percentual que efetivamente sobra <em>do preço de venda</em>
+      depois de pagar mercadoria, embalagem, custos fixos rateados, taxas e impostos.
+    </li>
+  </ul>
+
+  <h2>Exemplo prático com números reais</h2>
+
+  <p>
+    Imagine uma camiseta básica com a seguinte estrutura de custos por unidade:
+  </p>
+
+  <ul>
+    <li>Compra / produção: <strong>R$ 45,00</strong></li>
+    <li>Embalagem e variáveis: <strong>R$ 2,50</strong></li>
+    <li>Custo fixo rateado por unidade: <strong>R$ 5,00</strong></li>
+    <li>Tarifa fixa por venda: <strong>R$ 0,50</strong></li>
+  </ul>
+
+  <p>
+    Somando esses itens, seu <strong>custo base unitário é R$ 53,00</strong>. Agora, suponha que
+    você tenha <strong>6,0% de tributos estimados</strong>, <strong>4,5% de taxa de cartão/plataforma</strong>
+    (totalizando 10,5% sobre a venda) e deseje obter uma <strong>margem líquida de 25,0%</strong>.
+  </p>
+
+  <p>
+    Se você simplesmente somar <code>10,5% + 25,0% = 35,5%</code> em cima dos R$ 53,00,
+    chegará a R$ 71,82 — mas, ao descontar 10,5% de taxas sobre R$ 71,82, sua margem real
+    cairá para cerca de 15,7%, muito abaixo dos 25% planejados.
+  </p>
+
+  <h2>A fórmula correta (divisor de margem)</h2>
+
+  <p>
+    Para que a margem desejada sobre no preço final depois de todas as deduções percentuais,
+    dividimos o custo base pelo complemento das taxas e da margem:
+  </p>
+
+  <div class="formula-box">
+    Preço Sugerido = Custos Base (R$) ÷ (1 − Tributos % − Taxas % − Margem Desejada %)
+  </div>
+
+  <p>Aplicando os números da camiseta básica:</p>
+
+  <div class="formula-box">
+    Preço Sugerido = R$ 53,00 ÷ (1 − 0,06 − 0,045 − 0,25)<br />
+    Preço Sugerido = R$ 53,00 ÷ 0,645 = <strong>R$ 82,18</strong>
+  </div>
+
+  <p>Veja como a conta fecha exatamente:</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Componente</th>
+          <th>Valor</th>
+          <th>% sobre a venda</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Preço de venda sugerido</td>
+          <td><strong>R$ 82,18</strong></td>
+          <td>100,0%</td>
+        </tr>
+        <tr>
+          <td>Tributos + taxa percentual (10,5%) + tarifa fixa (R$ 0,50)</td>
+          <td>− R$ 9,13</td>
+          <td>11,1%</td>
+        </tr>
+        <tr>
+          <td>Custos operacionais (produto + embalagem + fixo rateado)</td>
+          <td>− R$ 52,50</td>
+          <td>63,9%</td>
+        </tr>
+        <tr>
+          <td><strong>Lucro líquido estimado por unidade</strong></td>
+          <td><strong>R$ 20,55</strong></td>
+          <td><strong>25,0%</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    Repare que, nesse cenário, atingir uma <strong>margem líquida de 25,0%</strong> exigiu
+    um <strong>markup de 55,1%</strong> sobre os custos base de R$ 53,00. Confundir os dois
+    conceitos é a principal causa de negócios que vendem bem, mas nunca veem o caixa crescer.
+  </p>
+</GuideLayout>

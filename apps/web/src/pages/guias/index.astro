@@ -1,0 +1,197 @@
+---
+const guides = [
+  {
+    slug: "margem-vs-markup-como-calcular-preco-de-venda",
+    tag: "PRECIFICAÇÃO NA PRÁTICA",
+    title: "Margem vs. Markup: por que multiplicar o custo por 2 faz você perder dinheiro",
+    summary:
+      "Entenda a diferença matemática entre margem sobre o preço de venda e markup sobre o custo, e veja como incluir taxas de cartão, marketplace e impostos sem corroer seu lucro.",
+    readTime: "4 min de leitura",
+  },
+  {
+    slug: "quanto-custa-dar-10-por-cento-de-desconto",
+    tag: "ESTRATÉGIA DE DESCONTOS",
+    title: "Quanto custa dar 10% de desconto? A conta que todo MEI precisa fazer antes de promover",
+    summary:
+      "Dar 10% de desconto no preço final não reduz seu lucro em apenas 10%. Veja com números reais quanto sua margem encolhe e como calcular o desconto máximo sem prejuízo.",
+    readTime: "3 min de leitura",
+  },
+];
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Guias Práticos de Precificação para MEIs | Prisma Dados</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta
+      name="description"
+      content="Artigos práticos sobre formação de preço de venda, margem líquida, markup e simulação de descontos para MEIs e pequenos comerciantes."
+    />
+    <meta name="robots" content="index,follow" />
+  </head>
+
+  <body>
+    <div class="container">
+      <header>
+        <a class="brand" href="/">PRISMA <span>DADOS</span></a>
+        <span class="environment">CONTEÚDO EDUCATIVO</span>
+      </header>
+
+      <main>
+        <section class="hero">
+          <p class="eyebrow">CONHECIMENTO APLICADO</p>
+          <h1>Guias de precificação para pequenos negócios<span class="accent">.</span></h1>
+          <p class="subtitle">
+            Matemática simples e direta ao ponto para você formar preços com clareza,
+            proteger sua margem nas taxas e testar promoções antes de divulgar.
+          </p>
+        </section>
+
+        <section class="list" aria-label="Lista de guias">
+          {guides.map((guide) => (
+            <article class="card">
+              <p class="eyebrow">{guide.tag} · {guide.readTime.toUpperCase()}</p>
+              <h2>
+                <a href={`/guias/${guide.slug}`}>{guide.title}</a>
+              </h2>
+              <p>{guide.summary}</p>
+              <a class="read-more" href={`/guias/${guide.slug}`}>
+                Ler guia completo →
+              </a>
+            </article>
+          ))}
+        </section>
+      </main>
+
+      <footer>
+        <span>© Prisma Dados</span>
+        <span>Produtos digitais com inteligência.</span>
+      </footer>
+    </div>
+  </body>
+</html>
+
+<style>
+  :global(*) {
+    box-sizing: border-box;
+  }
+
+  :global(body) {
+    margin: 0;
+    background: #090e1c;
+    color: #f2f5ff;
+    font-family: Inter, system-ui, sans-serif;
+  }
+
+  .container {
+    width: min(920px, calc(100% - 40px));
+    margin: auto;
+  }
+
+  header, footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  header {
+    padding: 28px 0;
+    border-bottom: 1px solid #283247;
+  }
+
+  .brand {
+    color: white;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-decoration: none;
+  }
+
+  .brand span, .accent {
+    color: #91aaff;
+  }
+
+  .environment, .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #9ab0ff;
+    margin: 0 0 12px;
+  }
+
+  .hero {
+    padding: 56px 0 48px;
+  }
+
+  h1 {
+    font-size: clamp(34px, 5vw, 56px);
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    margin: 0 0 18px;
+  }
+
+  .subtitle {
+    font-size: clamp(18px, 2.4vw, 22px);
+    color: #c6d3ee;
+    line-height: 1.5;
+    max-width: 740px;
+    margin: 0;
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding-bottom: 72px;
+  }
+
+  .card {
+    border: 1px solid #293753;
+    background: #101a30;
+    border-radius: 16px;
+    padding: 28px;
+  }
+
+  .card h2 {
+    margin: 0 0 12px;
+    font-size: clamp(22px, 3vw, 28px);
+    line-height: 1.25;
+  }
+
+  .card h2 a {
+    color: #f2f5ff;
+    text-decoration: none;
+  }
+
+  .card h2 a:hover {
+    color: #91aaff;
+  }
+
+  .card p {
+    color: #b3bfd7;
+    font-size: 16px;
+    line-height: 1.65;
+    margin: 0 0 18px;
+  }
+
+  .read-more {
+    color: #91aaff;
+    font-weight: 650;
+    font-size: 15px;
+    text-decoration: none;
+  }
+
+  .read-more:hover {
+    text-decoration: underline;
+  }
+
+  footer {
+    padding: 28px 0 48px;
+    border-top: 1px solid #283247;
+    color: #9aa9c5;
+    font-size: 13px;
+  }
+</style>
