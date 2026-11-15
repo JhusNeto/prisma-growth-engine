@@ -11,9 +11,9 @@ from sqlalchemy.orm import Session
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "apps/api"))
 
-from app.db import get_engine  # noqa: E402
-from app.models import Offer, Product  # noqa: E402
-from app.page_models import ProductPage  # noqa: E402
+from app.db import get_engine
+from app.models import Offer, Product
+from app.page_models import ProductPage
 
 DATA_DIR = ROOT / "apps/web/src/data"
 
@@ -73,9 +73,7 @@ def serialize_product(
 
 
 def build_catalog(session: Session) -> tuple[list, list]:
-    products = session.scalars(
-        select(Product).order_by(Product.slug)
-    ).all()
+    products = session.scalars(select(Product).order_by(Product.slug)).all()
 
     public = []
     preview = []
@@ -84,9 +82,7 @@ def build_catalog(session: Session) -> tuple[list, list]:
         page = session.get(ProductPage, product.id)
 
         offers = session.scalars(
-            select(Offer).where(
-                Offer.product_id == product.id
-            )
+            select(Offer).where(Offer.product_id == product.id)
         ).all()
 
         valid_offers = sorted(
@@ -95,26 +91,18 @@ def build_catalog(session: Session) -> tuple[list, list]:
         )
 
         if product.slug == "precifica-facil":
-            preview.append(
-                serialize_product(product, page, valid_offers)
-            )
+            preview.append(serialize_product(product, page, valid_offers))
 
         if product.status != "live":
             continue
 
         if page is None or not page.approved:
-            raise RuntimeError(
-                f"Produto live sem conteúdo aprovado: {product.slug}"
-            )
+            raise RuntimeError(f"Produto live sem conteúdo aprovado: {product.slug}")
 
         if not valid_offers:
-            raise RuntimeError(
-                f"Produto live sem checkout válido: {product.slug}"
-            )
+            raise RuntimeError(f"Produto live sem checkout válido: {product.slug}")
 
-        public.append(
-            serialize_product(product, page, valid_offers)
-        )
+        public.append(serialize_product(product, page, valid_offers))
 
     return public, preview
 
@@ -123,9 +111,7 @@ def write_json(name: str, records: list) -> None:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     destination = DATA_DIR / name
 
-    content = json.dumps(
-        records, ensure_ascii=False, indent=2
-    ) + "\n"
+    content = json.dumps(records, ensure_ascii=False, indent=2) + "\n"
 
     with tempfile.NamedTemporaryFile(
         mode="w",
