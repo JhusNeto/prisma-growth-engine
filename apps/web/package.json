@@ -7,7 +7,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "prebuild": "cd ../.. && .venv/bin/python scripts/export_catalog.py"
+    "prebuild": "cd ../.. && .venv/bin/python scripts/export_catalog.py",
+    "deploy": "npm run build && npx wrangler pages deploy dist --project-name=prismadados --branch=main"
   },
   "dependencies": {
     "astro": "^7.4.12"
