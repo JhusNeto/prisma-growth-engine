@@ -1,5 +1,7 @@
 import json
+import os
 import sys
+import tempfile
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -9,14 +11,14 @@ from sqlalchemy.orm import Session
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "apps/api"))
 
-from app.db import get_engine
-from app.models import Offer, Product
-from app.page_models import ProductPage
+from app.db import get_engine  # noqa: E402
+from app.models import Offer, Product  # noqa: E402
+from app.page_models import ProductPage  # noqa: E402
 
 DATA_DIR = ROOT / "apps/web/src/data"
 
 
-def valid_offer(offer):
+def valid_offer(offer: Offer) -> bool:
     if not offer.active or offer.price_cents <= 0:
         return False
 
@@ -32,12 +34,33 @@ def valid_offer(offer):
         return False
 
 
-def serialize(product, offers):
+def serialize_page(page: ProductPage | None) -> dict | None:
+    if page is None:
+        return None
+
+    return {
+        "headline": page.headline,
+        "subheadline": page.subheadline,
+        "description": page.description,
+        "benefits": page.benefits,
+        "faqs": page.faqs,
+        "cta_label": page.cta_label,
+        "seo_title": page.seo_title,
+        "seo_description": page.seo_description,
+    }
+
+
+def serialize_product(
+    product: Product,
+    page: ProductPage | None,
+    offers: list[Offer],
+) -> dict:
     return {
         "slug": product.slug,
         "name": product.name,
         "audience": product.audience,
         "status": product.status,
+        "page": serialize_page(page),
         "offers": [
             {
                 "price_cents": offer.price_cents,
@@ -49,15 +72,21 @@ def serialize(product, offers):
     }
 
 
-with Session(get_engine()) as session:
-    products = session.scalars(select(Product).order_by(Product.slug)).all()
+def build_catalog(session: Session) -> tuple[list, list]:
+    products = session.scalars(
+        select(Product).order_by(Product.slug)
+    ).all()
 
     public = []
     preview = []
 
     for product in products:
+        page = session.get(ProductPage, product.id)
+
         offers = session.scalars(
-            select(Offer).where(Offer.product_id == product.id)
+            select(Offer).where(
+                Offer.product_id == product.id
+            )
         ).all()
 
         valid_offers = sorted(
@@ -65,29 +94,65 @@ with Session(get_engine()) as session:
             key=lambda offer: offer.price_cents,
         )
 
-        record = serialize(product, valid_offers)
-
         if product.slug == "precifica-facil":
-            preview.append(record)
+            preview.append(
+                serialize_product(product, page, valid_offers)
+            )
 
-        if product.status == "live":
-            page = session.get(ProductPage, product.id)
+        if product.status != "live":
+            continue
 
-            if page is None or not page.approved:
-                raise SystemExit(f"Produto live sem conteúdo aprovado: {product.slug}")
+        if page is None or not page.approved:
+            raise RuntimeError(
+                f"Produto live sem conteúdo aprovado: {product.slug}"
+            )
 
-        if product.status == "live":
-            if not valid_offers:
-                raise SystemExit(f"Produto live sem checkout válido: {product.slug}")
+        if not valid_offers:
+            raise RuntimeError(
+                f"Produto live sem checkout válido: {product.slug}"
+            )
 
-            public.append(record)
+        public.append(
+            serialize_product(product, page, valid_offers)
+        )
+
+    return public, preview
 
 
-def write_json(name, records):
-    path = DATA_DIR / name
-    path.write_text(json.dumps(records, ensure_ascii=False, indent=2) + "\n")
-    print(f"{path.name}: {len(records)} produto(s)")
+def write_json(name: str, records: list) -> None:
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    destination = DATA_DIR / name
+
+    content = json.dumps(
+        records, ensure_ascii=False, indent=2
+    ) + "\n"
+
+    with tempfile.NamedTemporaryFile(
+        mode="w",
+        encoding="utf-8",
+        dir=DATA_DIR,
+        prefix=f".{name}.",
+        delete=False,
+    ) as temporary:
+        temporary.write(content)
+        temporary_path = Path(temporary.name)
+
+    try:
+        os.replace(temporary_path, destination)
+    finally:
+        temporary_path.unlink(missing_ok=True)
+
+    print(f"{name}: {len(records)} produto(s)")
 
 
-write_json("catalog.preview.json", preview)
-write_json("catalog.public.json", public)
+def main() -> None:
+    with Session(get_engine()) as session:
+        public, preview = build_catalog(session)
+
+    # Escrever somente após validar todos os produtos live.
+    write_json("catalog.public.json", public)
+    write_json("catalog.preview.json", preview)
+
+
+if __name__ == "__main__":
+    main()

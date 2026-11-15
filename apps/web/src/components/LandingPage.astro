@@ -1,99 +1,144 @@
 ---
 const { product, preview = false } = Astro.props;
 
+const content = product.page;
 const offer = product.offers?.[0];
+
+const headline = content?.headline ?? product.name;
+const subheadline = content?.subheadline ??
+  "O conteúdo comercial deste produto ainda não foi cadastrado.";
+
+const title = preview
+  ? `Prévia — ${product.name}`
+  : content?.seo_title ?? product.name;
+
+const description = preview
+  ? "Prévia interna de um produto digital."
+  : content?.seo_description ?? "";
 
 const price = offer
   ? new Intl.NumberFormat("pt-BR", {
       style: "currency",
-      currency: "BRL",
+      currency: offer.currency,
     }).format(offer.price_cents / 100)
   : null;
 
-const title = `${product.name} | Prisma Dados`;
-const description = `${product.name}: uma solução em preparação para ${product.audience}.`;
+const canBuy =
+  !preview &&
+  product.status === "live" &&
+  Boolean(content) &&
+  Boolean(offer?.checkout_url);
+
+const canonical = !preview && Astro.site
+  ? new URL(Astro.url.pathname, Astro.site).href
+  : null;
 ---
 
+<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
     <meta name="description" content={description} />
     <meta
       name="robots"
-      content={preview ? "noindex,nofollow" : "index,follow"}
+      content={preview ? "noindex,nofollow,noarchive" : "index,follow"}
     />
-    <title>{title}</title>
+
+    {canonical && <link rel="canonical" href={canonical} />}
+
+    {!preview && (
+      <>
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+      </>
+    )}
   </head>
 
   <body>
-    <div class="shell">
+    <div class="container">
       <header>
         <a class="brand" href="/">PRISMA <span>DADOS</span></a>
-        <span class="header-label">
-          {preview ? "AMBIENTE DE PRÉVIA" : "PRODUTOS DIGITAIS"}
+        <span class="environment">
+          {preview ? "PRÉVIA LOCAL" : "PRODUTOS DIGITAIS"}
         </span>
       </header>
 
       <main>
-        <div class="hero">
-          <div class="eyebrow">
-            {preview ? "PRÉVIA INTERNA · NÃO PUBLICADO" : "SOLUÇÃO DIGITAL"}
-          </div>
-
-          <h1>{product.name}<span class="dot">.</span></h1>
-
-          <p class="lead">
-            Uma proposta digital pensada para
-            <strong>{product.audience.toLowerCase()}</strong>.
+        <section class="hero">
+          <p class="eyebrow">
+            {preview ? "CONTEÚDO EM REVISÃO" : "SOLUÇÃO DIGITAL"}
           </p>
 
-          <p class="description">
-            Estamos preparando uma experiência objetiva,
-            prática e fácil de utilizar. Os detalhes do produto
-            serão apresentados após sua validação.
-          </p>
+          <h1>{headline}<span class="accent">.</span></h1>
+          <p class="subtitle">{subheadline}</p>
+
+          {content && (
+            <p class="description">{content.description}</p>
+          )}
 
           <div class="actions">
-            {
-              !preview && offer ? (
-                <a
-                  class="primary"
-                  href={offer.checkout_url}
-                  rel="noopener noreferrer"
-                >
-                  Conhecer oferta · {price}
-                </a>
-              ) : (
-                <span class="disabled">Oferta ainda não disponível</span>
-              )
-            }
-          </div>
-        </div>
-
-        <section class="info">
-          <div>
-            <span class="info-number">01 /</span>
-            <h2>Proposta</h2>
-            <p>Uma experiência digital com foco em clareza e facilidade.</p>
-          </div>
-
-          <div>
-            <span class="info-number">02 /</span>
-            <h2>Disponibilidade</h2>
-            <p>
-              {preview
-                ? "Produto em desenvolvimento e validação."
-                : "Consulte as condições disponíveis na oferta."}
-            </p>
-          </div>
-
-          <div>
-            <span class="info-number">03 /</span>
-            <h2>Próximos passos</h2>
-            <p>Confira as informações comerciais antes de adquirir.</p>
+            {canBuy ? (
+              <a
+                class="buy-button"
+                href={offer.checkout_url}
+                rel="noopener noreferrer"
+              >
+                {content.cta_label}
+                <span>{price}</span>
+              </a>
+            ) : (
+              <span class="unavailable">
+                {preview
+                  ? "Prévia sem compra disponível"
+                  : "Oferta indisponível"}
+              </span>
+            )}
           </div>
         </section>
+
+        {content?.benefits?.length > 0 && (
+          <section class="section" aria-labelledby="benefits-heading">
+            <p class="eyebrow">O QUE VOCÊ ENCONTRA</p>
+            <h2 id="benefits-heading">Benefícios</h2>
+
+            <div class="benefits">
+              {content.benefits.map((benefit, index) => (
+                <div class="benefit">
+                  <span class="number">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <p>{benefit}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {content?.faqs?.length > 0 && (
+          <section class="section" aria-labelledby="faq-heading">
+            <p class="eyebrow">DÚVIDAS FREQUENTES</p>
+            <h2 id="faq-heading">Perguntas e respostas</h2>
+
+            <div class="faqs">
+              {content.faqs.map((faq) => (
+                <details>
+                  <summary>{faq.question}</summary>
+                  <p>{faq.answer}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {preview && (
+          <aside class="preview-notice">
+            Esta página é uma prévia de desenvolvimento.
+            O produto ainda não está disponível para compra aqui.
+          </aside>
+        )}
       </main>
 
       <footer>
@@ -105,89 +150,177 @@ const description = `${product.name}: uma solução em preparação para ${produ
 </html>
 
 <style>
-  :global(*) { box-sizing: border-box; }
+  :global(*) {
+    box-sizing: border-box;
+  }
 
   :global(body) {
     margin: 0;
     background: #090e1c;
-    color: #f1f5ff;
-    font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+    color: #f2f5ff;
+    font-family: Inter, system-ui, sans-serif;
   }
 
-  .shell { max-width: 1160px; margin: auto; padding: 0 28px; }
+  .container {
+    width: min(1100px, calc(100% - 44px));
+    margin: auto;
+  }
 
   header, footer {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    gap: 20px;
   }
 
-  header { padding: 34px 0; border-bottom: 1px solid #253047; }
+  header {
+    padding: 32px 0;
+    border-bottom: 1px solid #283247;
+  }
 
-  .brand { color: white; text-decoration: none; font-weight: 900; letter-spacing: 2px; }
-  .brand span, .dot { color: #7e9cff; }
-  .header-label { font-size: 11px; letter-spacing: 2px; color: #a1aec8; }
+  .brand {
+    color: white;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-decoration: none;
+  }
 
-  .hero { padding: 120px 0 140px; max-width: 850px; }
+  .brand span, .accent, .number {
+    color: #91aaff;
+  }
 
-  .eyebrow { font-size: 12px; letter-spacing: 2px; color: #88a5ff; }
+  .environment, .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #9ab0ff;
+  }
+
+  .hero {
+    padding: 105px 0 125px;
+    max-width: 900px;
+  }
 
   h1 {
+    font-size: clamp(45px, 7.5vw, 92px);
+    letter-spacing: -3px;
+    line-height: 1.08;
     margin: 24px 0;
-    font-size: clamp(60px, 10vw, 122px);
-    letter-spacing: -6px;
-    line-height: 1;
   }
 
-  .lead { font-size: clamp(22px, 3vw, 33px); line-height: 1.4; }
-  .lead strong { color: #a9bbff; }
+  .subtitle {
+    font-size: clamp(20px, 2.8vw, 29px);
+    color: #c6d3ee;
+    line-height: 1.45;
+  }
 
   .description {
-    max-width: 660px;
-    margin-top: 30px;
-    color: #b0bdd4;
+    max-width: 720px;
+    color: #aab8d4;
     font-size: 17px;
-    line-height: 1.8;
+    line-height: 1.85;
+    margin-top: 28px;
+    white-space: pre-line;
   }
 
-  .actions { margin-top: 42px; }
+  .actions {
+    margin-top: 42px;
+  }
 
-  .primary, .disabled {
-    display: inline-block;
+  .buy-button, .unavailable {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    align-items: center;
     padding: 18px 25px;
     border-radius: 12px;
+    font-weight: 750;
+  }
+
+  .buy-button {
+    background: #98b0ff;
+    color: #071126;
     text-decoration: none;
-    font-weight: 700;
   }
 
-  .primary { background: #93acff; color: #071126; }
-  .primary:hover { background: #c0ceff; }
-  .disabled { background: #1d2940; color: #a1afc8; }
+  .buy-button:hover {
+    background: #c4d0ff;
+  }
 
-  .info {
+  .buy-button span {
+    font-weight: 500;
+  }
+
+  .unavailable {
+    background: #1c2942;
+    color: #aebbd4;
+  }
+
+  .section {
+    padding: 65px 0;
+    border-top: 1px solid #283247;
+  }
+
+  h2 {
+    font-size: clamp(28px, 4vw, 42px);
+    letter-spacing: -1px;
+    margin: 18px 0 36px;
+  }
+
+  .benefits {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-    padding: 50px 0 80px;
-    border-top: 1px solid #253047;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
   }
 
-  .info-number { color: #829bf0; }
-  .info h2 { font-size: 20px; }
-  .info p { color: #a3b0c8; line-height: 1.7; }
+  .benefit, details {
+    border: 1px solid #293753;
+    background: #101a30;
+    border-radius: 14px;
+    padding: 24px;
+  }
+
+  .benefit p {
+    font-size: 18px;
+    line-height: 1.5;
+    margin-bottom: 0;
+  }
+
+  details + details {
+    margin-top: 12px;
+  }
+
+  summary {
+    cursor: pointer;
+    font-weight: 650;
+    line-height: 1.5;
+  }
+
+  details p {
+    color: #b3bfd7;
+    line-height: 1.7;
+  }
+
+  .preview-notice {
+    padding: 20px;
+    border: 1px dashed #65759a;
+    border-radius: 12px;
+    color: #b4c3e0;
+    margin: 25px 0 60px;
+  }
 
   footer {
-    border-top: 1px solid #253047;
-    padding: 28px 0 50px;
-    color: #8898b4;
+    padding: 30px 0 50px;
+    border-top: 1px solid #283247;
+    color: #9aa9c5;
     font-size: 13px;
   }
 
   @media (max-width: 700px) {
-    .hero { padding: 80px 0 100px; }
-    h1 { letter-spacing: -3px; }
-    .info { grid-template-columns: 1fr; }
-    .header-label { font-size: 9px; }
-    footer { gap: 20px; }
+    header { flex-wrap: wrap; }
+    .hero { padding: 75px 0 85px; }
+    .benefits { grid-template-columns: 1fr; }
+    .section { padding: 45px 0; }
+    footer { flex-direction: column; align-items: flex-start; }
   }
 </style>

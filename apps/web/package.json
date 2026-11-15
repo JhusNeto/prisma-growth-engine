@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "prebuild": "cd ../.. && .venv/bin/python scripts/export_catalog.py"
   },
   "dependencies": {
     "astro": "^7.4.12"
