@@ -12,4 +12,4 @@
 6. Na mesma transação, criar ou atualizar `orders` usando `provider + provider_transaction_id` respeitando precedência de estado, marcar `processed_at` e inserir evento (`order.<status>`) em `outbox_events`.
 7. Responder `200 OK` imediatamente após o commit transacional; nunca aguardar e-mail, IA ou entrega.
 
-**Observabilidade:** correlação por `event_id`, `provider_transaction_id` e `order_id`. Payloads sensíveis ficam fora do banco e dos logs[cite: 1].
+**Observabilidade:** correlação por `event_id`, `provider_transaction_id` e `order_id`. Payloads sensíveis ficam fora do banco e dos logs.
