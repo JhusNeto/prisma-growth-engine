@@ -75,10 +75,6 @@ const canonical = !preview && Astro.site
           <h1>{headline}<span class="accent">.</span></h1>
           <p class="subtitle">{subheadline}</p>
 
-          {content && (
-            <p class="description">{content.description}</p>
-          )}
-
           <div class="actions">
             {canBuy ? (
               <a
@@ -92,11 +88,16 @@ const canonical = !preview && Astro.site
             ) : (
               <span class="unavailable">
                 {preview
-                  ? "Prévia sem compra disponível"
+                  ? "Compra indisponível nesta prévia"
                   : "Oferta indisponível"}
               </span>
             )}
           </div>
+
+          {content && (
+            <p class="description">{content.description}</p>
+          )}
+
         </section>
 
         {content?.benefits?.length > 0 && (
@@ -197,15 +198,15 @@ const canonical = !preview && Astro.site
   }
 
   .hero {
-    padding: 105px 0 125px;
+    padding: 64px 0 85px;
     max-width: 900px;
   }
 
   h1 {
-    font-size: clamp(45px, 7.5vw, 92px);
-    letter-spacing: -3px;
+    font-size: clamp(42px, 6.3vw, 76px);
+    letter-spacing: -2px;
     line-height: 1.08;
-    margin: 24px 0;
+    margin: 20px 0;
   }
 
   .subtitle {
@@ -224,7 +225,7 @@ const canonical = !preview && Astro.site
   }
 
   .actions {
-    margin-top: 42px;
+    margin-top: 26px;
   }
 
   .buy-button, .unavailable {
@@ -318,7 +319,16 @@ const canonical = !preview && Astro.site
 
   @media (max-width: 700px) {
     header { flex-wrap: wrap; }
-    .hero { padding: 75px 0 85px; }
+    .hero { padding: 52px 0 64px; }
+    h1 {
+      font-size: clamp(36px, 10vw, 48px);
+      letter-spacing: -1.4px;
+    }
+    .buy-button, .unavailable {
+      width: 100%;
+      justify-content: center;
+      text-align: center;
+    }
     .benefits { grid-template-columns: 1fr; }
     .section { padding: 45px 0; }
     footer { flex-direction: column; align-items: flex-start; }
