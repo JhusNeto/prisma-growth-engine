@@ -1,1 +1,74 @@
-[]
+[
+  {
+    "slug": "precifica-facil",
+    "name": "Precifica Fácil",
+    "audience": "Pequenos comerciantes e MEIs",
+    "status": "live",
+    "page": {
+      "headline": "Precifique seus produtos com mais clareza",
+      "subheadline": "Uma planilha prática para MEIs e pequenos comerciantes calcularem preços de venda e simularem descontos.",
+      "description": "O Precifica Fácil ajuda você a organizar custos, despesas, taxas e margem desejada em um único lugar. Com base nos dados informados, a planilha calcula um preço sugerido, o lucro estimado e a margem resultante. Também permite simular descontos e consultar exemplos de preenchimento.",
+      "benefits": [
+        "Calcule o preço de venda com base nos seus custos e taxas.",
+        "Visualize o lucro e a margem estimados por unidade.",
+        "Simule descontos e acompanhe o impacto no resultado.",
+        "Utilize exemplos práticos e instruções de preenchimento.",
+        "Edite os campos de entrada sem alterar as fórmulas protegidas."
+      ],
+      "faqs": [
+        {
+          "answer": "Não. A planilha inclui instruções e exemplos para orientar o preenchimento.",
+          "question": "Preciso dominar Excel para utilizar?"
+        },
+        {
+          "answer": "Sim. O arquivo XLSX foi testado no Excel para a Web, incluindo o recálculo das fórmulas.",
+          "question": "Posso utilizar no Excel para a Web?"
+        },
+        {
+          "answer": "Não. Os resultados são estimativas baseadas nos custos, taxas e margens informados.",
+          "question": "O preço sugerido garante lucro?"
+        }
+      ],
+      "cta_label": "Adquirir por R$ 29,90",
+      "seo_title": "Precifica Fácil | Planilha de Precificação para MEIs",
+      "seo_description": "Calcule preços de venda, custos e margens com o Precifica Fácil. Planilha XLSX para MEIs com simulador de descontos e exemplos."
+    },
+    "media": {
+      "section_eyebrow": "POR DENTRO DA PLANILHA",
+      "section_title": "Veja o Precifica Fácil funcionando",
+      "demos": [
+        {
+          "title": "1. Precificador — descubra seu preço de venda",
+          "caption": "Informe custos unitários, tarifas, tributos e a margem desejada (ex.: 25% na camiseta básica) para chegar ao preço sugerido de R$ 82,18 e ao diagnóstico de viabilidade.",
+          "image": "/images/precifica-facil/precificador.png",
+          "alt": "Aba Precificador da planilha Precifica Fácil mostrando custos, taxas, margem de 25% e preço sugerido de R$ 82,18",
+          "width": 1041,
+          "height": 786
+        },
+        {
+          "title": "2. Simulador — veja o impacto real dos descontos",
+          "caption": "Ao simular 10% de desconto, o preço cai para R$ 73,96, o lucro estimado vai para R$ 13,19 e a margem efetiva passa a 17,8% — além de indicar o desconto máximo sem prejuízo.",
+          "image": "/images/precifica-facil/simulador.png",
+          "alt": "Aba Simulador mostrando impacto de 10% de desconto e tabela automática de cenários de 0% a 30%",
+          "width": 1297,
+          "height": 786
+        },
+        {
+          "title": "3. Exemplos — aprenda com cenários práticos",
+          "caption": "Compare três produtos prontos (camiseta básica, caneca personalizada e lanche artesanal) para entender rapidamente como preencher cada coluna.",
+          "image": "/images/precifica-facil/exemplos.png",
+          "alt": "Aba Exemplos com três cenários práticos preenchidos lado a lado",
+          "width": 1802,
+          "height": 520
+        }
+      ]
+    },
+    "offers": [
+      {
+        "price_cents": 2990,
+        "currency": "BRL",
+        "checkout_url": "https://pay.hotmart.com/K108503525R"
+      }
+    ]
+  }
+]
