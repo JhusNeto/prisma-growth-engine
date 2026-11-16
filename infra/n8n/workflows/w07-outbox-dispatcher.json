@@ -1,0 +1,243 @@
+{
+  "name": "W07 - Prisma Outbox Dispatcher & Commercial Alerts",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "id": "w07-node-schedule",
+      "name": "Schedule (1 min)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:8000/v1/outbox/pending",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "limit",
+              "value": "50"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Admin-Key",
+              "value": "{{ $env.PRISMA_ADMIN_API_KEY }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "w07-node-fetch",
+      "name": "GET Outbox Pending",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-has-id",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "w07-node-filter",
+      "name": "Has Pending Event?",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        700,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "cond-order-event",
+                    "leftValue": "={{ $json.event_type }}",
+                    "rightValue": "order.",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Commercial Order"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "id": "w07-node-switch",
+      "name": "Route Event Type",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        940,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "w07-node-alert-hook",
+      "name": "Hook Alerta Comercial (Telegram/Email)",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://host.docker.internal:8000/v1/outbox/{{ $json.id }}/ack",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Admin-Key",
+              "value": "{{ $env.PRISMA_ADMIN_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\"consumer\": \"n8n-w07-outbox-dispatcher\"}",
+        "options": {}
+      },
+      "id": "w07-node-ack",
+      "name": "POST Outbox ACK",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1460,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Schedule (1 min)": {
+      "main": [
+        [
+          {
+            "node": "GET Outbox Pending",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET Outbox Pending": {
+      "main": [
+        [
+          {
+            "node": "Has Pending Event?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Pending Event?": {
+      "main": [
+        [
+          {
+            "node": "Route Event Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Event Type": {
+      "main": [
+        [
+          {
+            "node": "Hook Alerta Comercial (Telegram/Email)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "POST Outbox ACK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hook Alerta Comercial (Telegram/Email)": {
+      "main": [
+        [
+          {
+            "node": "POST Outbox ACK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "w07-v1-0-0",
+  "meta": {
+    "instanceId": "prisma-growth-engine-local"
+  },
+  "tags": []
+}
