@@ -7,6 +7,9 @@ class Settings(BaseSettings):
     database_url: str
     admin_api_key: str
     hotmart_hottok: str = ""
+    cors_origins: str = ""
+    sentry_dsn: str = ""
+    sentry_environment: str = "development"
 
     model_config = SettingsConfigDict(
         env_file=".env",

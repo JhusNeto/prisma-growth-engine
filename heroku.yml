@@ -1,0 +1,11 @@
+build:
+  docker:
+    web: Dockerfile
+  config:
+    DOCKERFILE: Dockerfile
+release:
+  command:
+    - alembic upgrade head
+  image: web
+run:
+  web: uvicorn app.main:app --app-dir apps/api --host 0.0.0.0 --port ${PORT}

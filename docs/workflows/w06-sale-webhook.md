@@ -1,6 +1,6 @@
 # W06 — Recebimento de venda
 
-**Status:** VALIDATED LOCALLY (`POST /v1/webhooks/hotmart`)
+**Status:** VALIDATED LOCALLY (`POST /v1/webhooks/hotmart`); operação externa depende de uma API pública configurada
 
 **Gatilho:** checkout envia webhook de alteração de compra (`PURCHASE_APPROVED`, `PURCHASE_COMPLETE`, `PURCHASE_WAITING_PAYMENT`, `PURCHASE_BILLET_PRINTED`, `PURCHASE_REFUNDED`, `PURCHASE_CHARGEBACK`, `PURCHASE_PROTEST`, `PURCHASE_CANCELED`, `PURCHASE_EXPIRED`).
 

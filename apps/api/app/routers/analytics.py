@@ -5,6 +5,7 @@ from app.commerce_models import Order
 from app.db import get_session
 from app.models import OutboxEvent, Product
 from app.security import require_admin
+from app.tracking_models import TrackingEvent
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import case, func, select
 from sqlalchemy.orm import Session
@@ -107,6 +108,16 @@ def get_analytics_overview(
     pending_outbox = session.scalar(
         select(func.count(OutboxEvent.id)).where(OutboxEvent.published_at.is_(None))
     ) or 0
+    tracking_stats = session.execute(
+        select(
+            func.count(
+                case((TrackingEvent.event_type == "page_view", TrackingEvent.id))
+            ).label("page_views"),
+            func.count(
+                case((TrackingEvent.event_type == "checkout_click", TrackingEvent.id))
+            ).label("checkout_clicks"),
+        )
+    ).one()
 
     approved_count = int(order_stats.approved)
     gross_approved = int(order_stats.gross_approved_cents)
@@ -128,4 +139,6 @@ def get_analytics_overview(
         net_revenue_cents=net_revenue,
         average_ticket_cents=avg_ticket,
         pending_outbox_events=int(pending_outbox),
+        page_views=int(tracking_stats.page_views),
+        checkout_clicks=int(tracking_stats.checkout_clicks),
     )

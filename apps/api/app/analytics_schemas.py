@@ -31,3 +31,5 @@ class AnalyticsOverview(BaseModel):
     net_revenue_cents: int
     average_ticket_cents: int
     pending_outbox_events: int
+    page_views: int
+    checkout_clicks: int

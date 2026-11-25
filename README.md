@@ -64,6 +64,7 @@ docker-compose.yml  PostgreSQL + n8n para desenvolvimento
 - [ADRs](docs/adr/)
 - [Workflows](docs/workflows/)
 - [Runbooks locais e operacionais](docs/runbooks/)
+- [Migração para a nuvem](docs/runbooks/cloud-migration.md)
 
 ## Comandos úteis
 
@@ -73,4 +74,3 @@ docker compose down                 # para os containers, preserva dados
 docker compose down -v              # APAGA os dados locais: use apenas para reiniciar do zero
 curl http://localhost:8000/health
 \`\`\`
-

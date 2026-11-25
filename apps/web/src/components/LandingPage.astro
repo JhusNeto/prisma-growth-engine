@@ -34,6 +34,9 @@ const canBuy =
 const canonical = !preview && Astro.site
   ? new URL(Astro.url.pathname, Astro.site).href
   : null;
+const trackingUrl = import.meta.env.PUBLIC_API_URL
+  ? `${import.meta.env.PUBLIC_API_URL.replace(/\/$/, "")}/v1/events`
+  : null;
 ---
 
 <!doctype html>
@@ -60,7 +63,11 @@ const canonical = !preview && Astro.site
     )}
   </head>
 
-  <body>
+  <body
+    data-tracking-url={trackingUrl ?? undefined}
+    data-product-slug={product.slug}
+    data-preview={preview ? "true" : "false"}
+  >
     <div class="container">
       <header>
         <a class="brand" href="/">PRISMA <span>DADOS</span></a>
@@ -84,6 +91,8 @@ const canonical = !preview && Astro.site
                 class="buy-button"
                 href={offer.checkout_url}
                 rel="noopener noreferrer"
+                data-tracking-event="checkout_click"
+                data-product-slug={product.slug}
               >
                 {content.cta_label}
                 <span>{price}</span>
@@ -212,6 +221,31 @@ const canonical = !preview && Astro.site
 </html>
 
 <script>
+  const page = document.body;
+  const trackingUrl = page.dataset.trackingUrl;
+  const productSlug = page.dataset.productSlug;
+  const isPreview = page.dataset.preview === "true";
+
+  if (trackingUrl && productSlug && !isPreview) {
+    const sendTrackingEvent = (eventType) => {
+      const payload = JSON.stringify({
+        event_id: crypto.randomUUID(),
+        event_type: eventType,
+        product_slug: productSlug,
+        occurred_at: new Date().toISOString(),
+        consent_given: false,
+      });
+      navigator.sendBeacon?.(
+        trackingUrl,
+        new Blob([payload], { type: "application/json" })
+      );
+    };
+
+    sendTrackingEvent("page_view");
+    document.querySelector("[data-tracking-event='checkout_click']")
+      ?.addEventListener("click", () => sendTrackingEvent("checkout_click"));
+  }
+
   const dialog = document.getElementById("demo-lightbox") as HTMLDialogElement | null;
   const dialogImg = document.getElementById("lightbox-img") as HTMLImageElement | null;
   const dialogTitle = document.getElementById("lightbox-title");
@@ -250,6 +284,7 @@ const canonical = !preview && Astro.site
     background: #090e1c;
     color: #f2f5ff;
     font-family: Inter, system-ui, sans-serif;
+    overflow-x: hidden;
   }
 
   .container {
@@ -338,6 +373,13 @@ const canonical = !preview && Astro.site
     background: #c4d0ff;
   }
 
+  .buy-button:focus-visible,
+  .zoom-button:focus-visible,
+  .close-button:focus-visible {
+    outline: 3px solid #d6e1ff;
+    outline-offset: 3px;
+  }
+
   .buy-button span {
     font-weight: 500;
   }
@@ -416,6 +458,7 @@ const canonical = !preview && Astro.site
     border-radius: 10px;
     border: 1px solid #22304b;
     background: #0a101f;
+    -webkit-overflow-scrolling: touch;
   }
 
   .demo-frame img {
@@ -428,6 +471,7 @@ const canonical = !preview && Astro.site
   .lightbox {
     width: min(96vw, 1400px);
     max-height: 92vh;
+    margin: auto;
     padding: 0;
     border: 1px solid #35476b;
     border-radius: 14px;
@@ -538,5 +582,16 @@ const canonical = !preview && Astro.site
     .benefits { grid-template-columns: 1fr; }
     .section { padding: 45px 0; }
     footer { flex-direction: column; align-items: flex-start; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(*),
+    :global(*::before),
+    :global(*::after) {
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+    }
   }
 </style>

@@ -2,6 +2,7 @@
 
 ## Architecture
 - [N1/N2](architecture/n1-n2.md)
+- [Plano-mestre do projeto](plano-mestre.md)
 
 ## Architecture Decisions
 - [001 Modular Monolith](adr/001-modular-monolith.md)
@@ -10,6 +11,7 @@
 
 ## Specifications
 - [MVP](specs/mvp.md)
+- [Métricas do storefront](specs/tracking.md)
 
 ## Workflows
 - [W01 Product Intake](workflows/w01-product-intake.md)
@@ -18,6 +20,8 @@
 
 ## Operations
 - [Local Development](runbooks/local-development.md)
+- [Cloud Migration](runbooks/cloud-migration.md)
+- [Cloud Stack](operations/cloud-stack.md)
 - [Backup and Restore](runbooks/backup-restore.md)
 - [Webhook Incident](runbooks/webhook-incident.md)
 
