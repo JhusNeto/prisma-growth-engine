@@ -1,4 +1,7 @@
 import sentry_sdk
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 from app.config import get_settings
 from app.routers.analytics import router as analytics_router
 from app.routers.lifecycle import router as lifecycle_router
@@ -8,8 +11,6 @@ from app.routers.pages import router as pages_router
 from app.routers.products import router as products_router
 from app.routers.tracking import router as tracking_router
 from app.routers.webhooks import router as webhooks_router
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 
 settings = get_settings()
 

@@ -1,8 +1,9 @@
 from secrets import compare_digest
 from typing import Annotated
 
-from app.config import Settings, get_settings
 from fastapi import Depends, Header, HTTPException
+
+from app.config import Settings, get_settings
 
 
 def require_admin(

@@ -1,11 +1,12 @@
 from datetime import datetime
 from uuid import UUID
 
-from app.models import Base
 from sqlalchemy import Boolean, DateTime, ForeignKey, String, Text, func, text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column
+
+from app.models import Base
 
 
 class ProductPage(Base):

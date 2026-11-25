@@ -1,12 +1,13 @@
 from typing import Annotated
 
-from app.db import get_session
-from app.tracking_models import TrackingEvent
-from app.tracking_schemas import TrackingEventAccepted, TrackingEventCreate
 from fastapi import APIRouter, Depends, status
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
+
+from app.db import get_session
+from app.tracking_models import TrackingEvent
+from app.tracking_schemas import TrackingEventAccepted, TrackingEventCreate
 
 router = APIRouter(prefix="/v1", tags=["tracking"])
 

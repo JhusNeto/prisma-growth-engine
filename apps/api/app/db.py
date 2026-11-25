@@ -1,9 +1,10 @@
 from collections.abc import Iterator
 from functools import lru_cache
 
-from app.config import get_settings
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import Session
+
+from app.config import get_settings
 
 
 @lru_cache

@@ -2,14 +2,15 @@ from datetime import UTC, datetime
 from typing import Annotated
 from uuid import UUID
 
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+
 from app.db import get_session
 from app.models import OutboxEvent, Product
 from app.page_models import ProductPage
 from app.page_schemas import ProductPageRead, ProductPageWrite
 from app.security import require_admin
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import select
-from sqlalchemy.orm import Session
 
 router = APIRouter(
     prefix="/v1/products",

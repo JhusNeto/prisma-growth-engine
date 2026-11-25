@@ -1,14 +1,15 @@
 from typing import Annotated, Literal
 
+from fastapi import APIRouter, Depends, Query
+from sqlalchemy import case, func, select
+from sqlalchemy.orm import Session
+
 from app.analytics_schemas import AnalyticsOverview, OrderRead
 from app.commerce_models import Order
 from app.db import get_session
 from app.models import OutboxEvent, Product
 from app.security import require_admin
 from app.tracking_models import TrackingEvent
-from fastapi import APIRouter, Depends, Query
-from sqlalchemy import case, func, select
-from sqlalchemy.orm import Session
 
 router = APIRouter(
     prefix="/v1",

@@ -1,12 +1,13 @@
 from secrets import compare_digest
 from typing import Annotated
 
+from fastapi import APIRouter, Depends, Header, HTTPException
+from sqlalchemy.orm import Session
+
 from app.config import Settings, get_settings
 from app.db import get_session
 from app.services.hotmart_webhook import process_hotmart_webhook
 from app.webhook_schemas import HotmartWebhookPayload, WebhookAck
-from fastapi import APIRouter, Depends, Header, HTTPException
-from sqlalchemy.orm import Session
 
 router = APIRouter(
     prefix="/v1/webhooks",

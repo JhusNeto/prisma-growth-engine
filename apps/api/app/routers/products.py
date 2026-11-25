@@ -1,14 +1,15 @@
 from typing import Annotated
 from uuid import UUID
 
-from app.db import get_session
-from app.models import OutboxEvent, Product
-from app.schemas import ProductCreate, ProductRead
-from app.security import require_admin
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
+
+from app.db import get_session
+from app.models import OutboxEvent, Product
+from app.schemas import ProductCreate, ProductRead
+from app.security import require_admin
 
 router = APIRouter(
     prefix="/v1/products",

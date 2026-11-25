@@ -2,13 +2,14 @@ from datetime import UTC, datetime
 from decimal import ROUND_HALF_UP, Decimal
 from uuid import UUID
 
-from app.commerce_models import Order, ProviderEvent
-from app.models import Offer, OutboxEvent
-from app.webhook_schemas import HotmartWebhookPayload
 from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.orm import Session
+
+from app.commerce_models import Order, ProviderEvent
+from app.models import Offer, OutboxEvent
+from app.webhook_schemas import HotmartWebhookPayload
 
 EVENT_TO_ORDER_STATUS: dict[str, str] = {
     "PURCHASE_APPROVED": "approved",

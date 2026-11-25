@@ -1,13 +1,14 @@
 from typing import Annotated
 from uuid import UUID
 
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+
 from app.db import get_session
 from app.models import Offer, OutboxEvent, Product
 from app.schemas import OfferCreate, OfferRead, OfferUpdate
 from app.security import require_admin
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import select
-from sqlalchemy.orm import Session
 
 router = APIRouter(
     prefix="/v1",

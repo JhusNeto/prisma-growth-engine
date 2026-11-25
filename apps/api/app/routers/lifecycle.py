@@ -1,12 +1,13 @@
 from typing import Annotated
 from uuid import UUID
 
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+
 from app.db import get_session
 from app.schemas import ProductRead, ProductTransition
 from app.security import require_admin
 from app.services.lifecycle import transition_product
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
 
 router = APIRouter(
     prefix="/v1/products",

@@ -2,12 +2,13 @@ from datetime import UTC, datetime
 from urllib.parse import urlsplit
 from uuid import UUID
 
-from app.models import Offer, OutboxEvent, Product
-from app.page_models import ProductPage
-from app.schemas import ProductTransition
 from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+
+from app.models import Offer, OutboxEvent, Product
+from app.page_models import ProductPage
+from app.schemas import ProductTransition
 
 ALLOWED_TRANSITIONS = {
     "draft": {"prepared", "archived"},

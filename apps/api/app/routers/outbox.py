@@ -2,13 +2,14 @@ from datetime import UTC, datetime
 from typing import Annotated
 from uuid import UUID
 
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+
 from app.db import get_session
 from app.models import OutboxEvent
 from app.outbox_schemas import OutboxAckResponse, OutboxEventRead
 from app.security import require_admin
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import select
-from sqlalchemy.orm import Session
 
 router = APIRouter(
     prefix="/v1/outbox",
